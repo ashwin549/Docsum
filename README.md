@@ -1,5 +1,6 @@
 # Docsum
 
+![App Screenshot](docsum_app_pic.png)
 
 This is a Flutter mobile app that:
 1. Uses the device **camera** to capture images of hospital discharge letters.

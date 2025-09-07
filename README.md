@@ -1,16 +1,24 @@
-# docsum
+# Docsum
 
-A new Flutter project.
+![App Screenshot](docsum_app_pic.png)
 
-## Getting Started
+This is a Flutter mobile app that:
+1. Uses the device **camera** to capture images of hospital discharge letters.
+2. Runs **OCR (Optical Character Recognition)** with [Google ML Kit](https://pub.dev/packages/google_mlkit_text_recognition) to extract text from the image.
+3. Sends the extracted text to a **FastAPI backend** that calls the **Gemini API** to generate a clean structured summary:
+   - Patient Details
+   - Diagnosis
+   - Treatment / Procedures
+   - Follow-up Instructions
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Features
+- 📷 Take a picture with your phone camera.
+- 📝 Extract text directly from the image.
+- ✂️ Summarize the hospital discharge letter into meaningful sections.
+- 📋 Copy extracted or summarized text to clipboard.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Under development, a downloadable apk will be released soon!

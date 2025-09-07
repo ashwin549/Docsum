@@ -20,5 +20,11 @@ This is a Flutter mobile app that:
 - 📋 Copy extracted or summarized text to clipboard.
 
 ---
+## Download DocSum App
 
-# Under development, a downloadable apk will be released soon!
+You can download the latest release of DocSum from the GitHub Releases page:
+
+[Download Latest APK](https://github.com/ashwin549/Docsum/releases/latest/download/app-release.apk)
+
+> Note: Android may warn about installing apps from unknown sources. You may need to allow installing from this source in your device settings.
+

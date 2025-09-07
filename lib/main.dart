@@ -5,12 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_markdown/flutter_markdown.dart'; // ✅ NEW
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  runApp(OCRApp(camera: firstCamera));
+
+  // Look for the back camera
+  final backCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.back,
+    orElse: () => cameras.first, // fallback if none found
+  );
+
+  runApp(OCRApp(camera: backCamera));
 }
 
 class OCRApp extends StatelessWidget {
@@ -152,7 +159,7 @@ class _OCRResultScreenState extends State<OCRResultScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.5:8000/summarize'),
+        Uri.parse('https://fastapi-example-68a1.onrender.com/summarize'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -164,7 +171,6 @@ class _OCRResultScreenState extends State<OCRResultScreen> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
 
-        // Extract text from nested structure: candidates[0].content.parts[0].text
         String summaryText = "";
         try {
           if (responseData['candidates'] != null &&
@@ -174,7 +180,6 @@ class _OCRResultScreenState extends State<OCRResultScreen> {
               responseData['candidates'][0]['content']['parts'].isNotEmpty) {
             summaryText = responseData['candidates'][0]['content']['parts'][0]['text'] ?? "";
           } else {
-            // Fallback to direct summary field or full response
             summaryText = responseData['summary'] ?? responseData.toString();
           }
         } catch (e) {
@@ -284,9 +289,6 @@ class _OCRResultScreenState extends State<OCRResultScreen> {
                     )
                         : const Icon(Icons.summarize, size: 18),
                     label: Text(_isSummarizing ? "Summarizing..." : "Summarize"),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    ),
                   ),
               ],
             ),
@@ -313,12 +315,17 @@ class _OCRResultScreenState extends State<OCRResultScreen> {
                   ),
                 )
                     : SingleChildScrollView(
-                  child: SelectableText(
-                    _showSummary ? _summarizedText : _extractedText,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _showSummary ? Colors.lightBlueAccent : Colors.white,
+                  child: _showSummary
+                      ? MarkdownBody(   // ✅ render markdown
+                    data: _summarizedText,
+                    selectable: true,
+                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                      p: const TextStyle(fontSize: 16, color: Colors.lightBlueAccent),
                     ),
+                  )
+                      : SelectableText(
+                    _extractedText,
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ),
